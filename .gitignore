@@ -10,3 +10,6 @@ __pycache__/*
 
 # environment files
 .env
+
+# test data files
+test.csv
