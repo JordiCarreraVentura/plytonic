@@ -1,5 +1,12 @@
-# created by virtualenv automatically
+# virtual environment data and files
 pyvenv.cfg
 bin/*
+etc/*
 lib/*
+share/*
+
+# Python cache
+__pycache__/*
+
+# environment files
 .env
