@@ -1,2 +1,5 @@
+ipykernel
+ipython
 jupyterlab
 load-dotenv
+pandas

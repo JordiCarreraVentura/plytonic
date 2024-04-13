@@ -1,15 +1,9 @@
 import os
 
-import nbformat
+from nbformat import current as nbf
 
 from __init__ import OperativeSystem, UnsupportedPlatformError, PLATFORM
 from logger import LOGGER
-
-
-ENV     = os.environ
-CSV     = ENV['csv']     if 'csv'      in ENV else None
-DF_NAME = ENV['df_name'] if 'df_name'  in ENV else 'df_def'
-NB_PATH = ENV['nb_path'] if 'nb_path'  in ENV else None
 
 
 
@@ -25,7 +19,7 @@ class NotebookPathCollisionError(IOError):
 def make_default_name_by_platform():
     if PLATFORM is OperativeSystem.Linux \
     or PLATFORM is OperativeSystem.Mac:
-        folder = '/tmp'
+        folder = '.'
     else:
         raise UnsupportedPlatformError(PLATFORM.name)
     
@@ -38,40 +32,51 @@ def make_default_name_by_platform():
     return fullpath
 
 
-def make_csv_input_cell():
+def make_csv_input_cell(csv_path, df_name):
     cell = f"""
 import pandas as pd
-{DF_NAME} = pd.read_csv({CSV})
+
+{df_name} = pd.read_csv("{csv_path}")
     """
-    return nbformat.v4.new_code_cell(source=cell)
+    return nbf.new_code_cell(cell)
 
 
-def make_notebook():
-    
-    nb = nbformat.v4.new_notebook()
-    
-    if CSV:
-        nb.cells.append(make_csv_input_cell())
+def make_notebook(**kwargs):
 
-    return write(nb)
+    params = dict(kwargs.items())
 
+    csv_path = params['csv']
+    df_name  = params['df_name'] if 'df_name' in params else 'df'
+    nb_path  = params['nb_path'] if 'nb_path' in params else None
 
+    nb = nbf.new_notebook()
+    cells = []
 
+    if csv_path:
+        cells.append(make_csv_input_cell(csv_path, df_name))
 
-def write(nb) -> str:
-    if not nb.cells:
+    if not cells:
         LOGGER.warn('Notebook contains no cells. There is nothing to do.')
 
-    if not NB_PATH:
+    nb['worksheets'].append(nbf.new_worksheet(cells=cells))
+    final_path = write(nb, nb_path=nb_path)
+
+    return final_path
+
+
+
+def write(nb, nb_path='') -> str:
+
+    if not nb_path:
         final_path = make_default_name_by_platform()
         LOGGER.warn(
             'No location was specified for the session notebook. '
             f'Using default value: {final_path}'
         )
-    elif os.exists(NB_PATH):
-        raise NotebookPathCollisionError(NB_PATH)
+    elif os.path.exists(nb_path):
+        raise NotebookPathCollisionError(nb_path)
     else:
-        full_path  =  os.path.realpath(NB_PATH)
+        full_path  =  os.path.realpath(nb_path)
         folder     =  os.dirname(full_path)
         filename   =  os.path.basename(full_path)
         os.makedirs(folder, exist_ok=True)
@@ -79,6 +84,6 @@ def write(nb) -> str:
         LOGGER(f'Saving notebook in "{final_path}"...')
 
     with open(final_path, "w") as f:
-        nbformat.write(nb, f)
+        nbf.write(nb, f, 'ipynb')
     
     return final_path

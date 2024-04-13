@@ -38,5 +38,5 @@ class UserInterfaceLauncher:
         self.__launch()
     
     def __launch(self):
-        notebook = make_notebook()
-        os.system(f'jupyter notebook {notebook}')
+        notebook = make_notebook(**os.environ)
+        os.system(f'bin/python -m jupyter notebook {notebook} ')
