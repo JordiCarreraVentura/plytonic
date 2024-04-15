@@ -10,6 +10,7 @@ __pycache__/*
 
 # environment files
 .env
+openai*
 
 # test data files
 test.csv
