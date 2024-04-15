@@ -8,6 +8,9 @@ share/*
 # Python cache
 __pycache__/*
 
+# Jupyter checkpoints
+.ipynb_checkpoints/*
+
 # environment files
 .env
 openai*

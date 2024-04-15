@@ -12,6 +12,8 @@ UI_HELP_DFNAME = 'Name of the `DataFrame` variable assigned to the data read ' \
 UI_HELP_NBPATH = "Path where the custom notebook created for the new session ' \
                + 'will be written to."
 
+UI_HELP_KERNEL = "Name of the kernel for installing plytonic's dependencies " \
+                 "and where the notebook will be run from."
 
 
 class ParameterVariableNameCollision(RuntimeError):
@@ -23,9 +25,10 @@ class UserInterfaceLauncher:
 
     def __init__(self):
         self.parser = ArgumentParser()
-        self.parser.add_argument('--csv',     type=str, help=UI_HELP_CSV   )
-        self.parser.add_argument('--nb_path', type=str, help=UI_HELP_NBPATH)
-        self.parser.add_argument('--df_name', type=str, help=UI_HELP_DFNAME)
+        self.parser.add_argument('--csv',         type=str, help=UI_HELP_CSV   )
+        self.parser.add_argument('--nb_path',     type=str, help=UI_HELP_NBPATH)
+        self.parser.add_argument('--df_name',     type=str, help=UI_HELP_DFNAME)
+        self.parser.add_argument('--kernel_name', type=str, help=UI_HELP_KERNEL, default='plytonic_env')
     
     def __call__(self):
         args = self.parser.parse_args()
@@ -38,5 +41,20 @@ class UserInterfaceLauncher:
         self.__launch()
     
     def __launch(self):
-        notebook = make_notebook(**os.environ)
-        os.system(f'bin/python -m jupyter notebook {notebook} ')
+        notebook    =  make_notebook(**os.environ)
+        filepath    =  os.path.realpath(__file__)
+        folder      =  os.path.dirname(filepath)
+        kernel_name =  os.environ['kernel_name']
+        os.chdir(folder)
+
+        activate    = "source bin/activate"
+        install     = 'pip install -r requirements.txt'
+        deactivate  = "deactivate"
+        kernelize   = "plytonic_env_installed=`jupyter kernelspec list " \
+"""| grep plytonic | wc -l | awk '{print $1}'`; if [ $plytonic_env_installed -eq 0 ] ; 
+    then python -m ipykernel install --user --name """ \
+"'" + kernel_name + "' --display-name '" + kernel_name + "'; fi"
+
+        os.system(f'{activate}; {install}; {kernelize}; {deactivate}')
+        os.system(f'jupyter notebook "{notebook}" ' 
+                  f'--MultiKernelManager.default_kernel_name="{kernel_name}"')
