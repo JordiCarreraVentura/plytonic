@@ -18,8 +18,9 @@ openai*
 # test data files
 test.csv
 starcraft_units/*
+*.ipynb
 
 # package files
+poetry.lock
 dist/plytonic-0.1.0-py3-none-any.whl
 dist/plytonic-0.1.0.tar.gz
-
