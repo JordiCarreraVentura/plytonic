@@ -4,3 +4,4 @@ jupyterlab
 load-dotenv
 openai
 pandas
+twine

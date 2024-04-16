@@ -1,0 +1,26 @@
+[tool.poetry]
+name = "plytonic"
+version = "0.1.0"
+description = "Jupyter notebooks with integrated code generation from ChatGPT-3.5"
+authors = ["Jordi Carrera Ventura <jordi.carrera.ventura@gmail.com>"]
+license = "Copyrighted"
+readme = "README.md"
+packages = [
+    { include = "__main__.py" }
+]
+
+
+[tool.poetry.dependencies]
+python = "^3.11"
+ipykernel = "^6.29.4"
+ipython = "^8.23.0"
+jupyterlab = "^4.1.6"
+load-dotenv = "^0.1.0"
+openai = "^1.19.0"
+pandas = "^2.2.2"
+twine = "^5.0.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
