@@ -11,6 +11,9 @@ __pycache__/*
 # Jupyter checkpoints
 .ipynb_checkpoints/*
 
+# documentation
+dev notes.txt
+
 # environment files
 .env
 openai*
