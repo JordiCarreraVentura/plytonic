@@ -5,7 +5,6 @@ import sys
 from logger import LOGGER
 from __init__ import PLYTONIC_FOLDER, self_install
 
-
 if __name__ == '__main__':
 
     path_env = os.path.join(PLYTONIC_FOLDER, 'bin')
@@ -23,9 +22,5 @@ if __name__ == '__main__':
 
     else:
         from user_interface import UserInterfaceLauncher
-        from example_data import make_example
-
-        make_example()
-
         ui = UserInterfaceLauncher()
         ui()
