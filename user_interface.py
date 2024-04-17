@@ -29,7 +29,12 @@ class UserInterfaceLauncher:
         self.parser.add_argument('--nb_path',     type=str, help=UI_HELP_NBPATH)
         self.parser.add_argument('--df_name',     type=str, help=UI_HELP_DFNAME)
         self.parser.add_argument('--kernel_name', type=str, help=UI_HELP_KERNEL, default='plytonic_env')
-    
+        
+        filepath    =  os.path.realpath(__file__)
+        folder      =  os.path.dirname(filepath)
+        os.environ['WORKDIR'] = folder
+
+
     def __call__(self):
         args = self.parser.parse_args()
         for argname, argval in args.__dict__.items():
@@ -42,10 +47,10 @@ class UserInterfaceLauncher:
     
     def __launch(self):
         notebook    =  make_notebook(**os.environ)
-        filepath    =  os.path.realpath(__file__)
-        folder      =  os.path.dirname(filepath)
         kernel_name =  os.environ['kernel_name']
-        os.chdir(folder)
+
+        origin = os.getcwd()
+        os.chdir(os.environ['WORKDIR'])
 
         activate    = "source bin/activate"
         install     = 'pip install -r requirements.txt'
@@ -56,5 +61,6 @@ class UserInterfaceLauncher:
 "'" + kernel_name + "' --display-name '" + kernel_name + "'; fi"
 
         os.system(f'{activate}; {install}; {kernelize}; {deactivate}')
+        os.chdir(origin)
         os.system(f'jupyter notebook "{notebook}" ' 
                   f'--MultiKernelManager.default_kernel_name="{kernel_name}"')

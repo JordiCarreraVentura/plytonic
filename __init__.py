@@ -27,22 +27,23 @@ else:
 if PLATFORM is OperativeSystem.Win:
     raise UnsupportedPlatformError(OperativeSystem.Win.name)
 
+SOURCE_FOLDER = os.getcwd()
+
+path = os.path.realpath(__file__)
+PLYTONIC_FOLDER = os.path.dirname(path)
+
 
 def self_install():
-    source_folder = os.getcwd()
-    path = os.path.realpath(__file__)
-    folder = os.path.dirname(path)
-    os.chdir(folder)
+    os.chdir(PLYTONIC_FOLDER)
 
     # Activate the virtual environment
-    subprocess.run(['virtualenv', '-p', 'python3.11', '.'])
+    mk_env  = ' '.join(['virtualenv', '-p', 'python3.11', '.', ';'])
+    act_env = 'source bin/activate ;'
+    env_ins = ' '.join(['python', '-m', 'pip', 'install', '-r', 'requirements.txt', ';'])
+    #dea_env = 'deactivate ;'
+    dea_env = ''
 
-    subprocess.run(['source', 'bin/activate'], shell=True)
+    command = f'{mk_env}{act_env}{env_ins}{dea_env}'
+    os.system(command)
 
-    # Install requirements
-    subprocess.run(['pip', 'install', '-r', 'requirements.txt'])
-
-    # Deactivate the virtual environment
-    subprocess.run(['deactivate'], shell=True)
-
-    os.chdir(source_folder)
+    os.chdir(SOURCE_FOLDER)

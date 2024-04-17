@@ -17,10 +17,10 @@ class NotebookPathCollisionError(IOError):
         super().__init__(*args, **kwargs)
 
 
-def make_default_name_by_platform():
+def make_default_name_by_platform(params):
     if PLATFORM is OperativeSystem.Linux \
     or PLATFORM is OperativeSystem.Mac:
-        folder = '.'
+        folder = params['WORKDIR']
     else:
         raise UnsupportedPlatformError(PLATFORM.name)
     
@@ -107,15 +107,15 @@ def make_notebook(**kwargs):
         LOGGER.warn('Notebook contains no cells. There is nothing to do.')
 
     nb.cells.extend(cells)
-    final_path = write(nb, nb_path=nb_path)
+    final_path = write(nb, params, nb_path=nb_path)
 
     return final_path
 
 
-def write(nb, nb_path='') -> str:
+def write(nb, params, nb_path='') -> str:
 
     if not nb_path:
-        final_path = make_default_name_by_platform()
+        final_path = make_default_name_by_platform(params)
         LOGGER.warn(
             'No location was specified for the session notebook. '
             f'Using default value: {final_path}'
