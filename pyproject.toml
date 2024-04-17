@@ -6,12 +6,18 @@ authors = ["Jordi Carrera Ventura <jordi.carrera.ventura@gmail.com>"]
 license = "Copyrighted"
 readme = "README.md"
 packages = [
-    { include = "__main__.py" }
+    { include = "__init__.py" },
+    { include = "__main__.py" },
+    { include = "user_interface.py" },
+    { include = "notebook_utils.py" },
+    { include = "logger.py" },
+    { include = "llms.py" },
+    { include = "example_data.py" }
 ]
 
 
 [tool.poetry.dependencies]
-python = "^3.11"
+python = ">=3.11,<3.13"
 ipykernel = "^6.29.4"
 ipython = "^8.23.0"
 jupyterlab = "^4.1.6"
