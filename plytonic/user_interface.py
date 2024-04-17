@@ -51,12 +51,14 @@ class UserInterfaceLauncher:
 
         origin = os.getcwd()
         os.chdir(os.environ['WORKDIR'])
+        # print(os.environ['WORKDIR'])
+        # exit()
 
-        activate    = "source bin/activate"
-        install     = 'pip install -r requirements.txt'
+        activate    = f"source {os.path.dirname(os.environ['WORKDIR'])}/bin/activate"
+        install     = f'pip install -r {os.path.dirname(os.environ["WORKDIR"])}/requirements.txt'
         deactivate  = "deactivate"
         kernelize   = "plytonic_env_installed=`jupyter kernelspec list " \
-"""| grep plytonic | wc -l | awk '{print $1}'`; if [ $plytonic_env_installed -eq 0 ] ; 
+"""| grep plytonic_env | wc -l | awk '{print $1}'`; if [ $plytonic_env_installed -eq 0 ] ; 
     then python -m ipykernel install --user --name """ \
 "'" + kernel_name + "' --display-name '" + kernel_name + "'; fi"
 
