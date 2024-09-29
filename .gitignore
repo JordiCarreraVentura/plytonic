@@ -2,6 +2,11 @@
 bin/*
 lib/*
 pyvenv.cfg
+share/*
 
 # local documentation
 doc/*
+
+# Python package
+dist/*
+src/plytonic.egg-info/*
