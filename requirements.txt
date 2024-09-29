@@ -1,2 +1,7 @@
 build
+ipython==8.26.0
+nbformat==5.10.4
+python-dotenv==1.0.1
+openai==1.40.6
+snippyts
 twine

@@ -2,3 +2,6 @@
 bin/*
 lib/*
 pyvenv.cfg
+
+# local documentation
+doc/*
